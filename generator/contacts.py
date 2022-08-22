@@ -1,25 +1,23 @@
-import getopt
-import os
+from model.contact import Contact
 import random
 import string
+import os.path
+import jsonpickle
+import getopt
 import sys
 
-import jsonpickle
-
-from model.contact import Contact
-
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "n:f", ["number of contacts", "file"])
+    opts, args = getopt.getopt(sys.argv[1:], "n:f:", ["number of contacts", "file"])
 except getopt.GetoptError as err:
     getopt.usage()
     sys.exit(2)
 
-n = 3
+n = 2
 f = "data/contacts.json"
 
 for o, a in opts:
     if o == "-n":
-        n = int(n)
+        n = int(a)
     elif o == "-f":
         f = a
 
@@ -31,7 +29,6 @@ testdata = [Contact (firstname="", lastname="", address="")] + [
         Contact(firstname=random_string("f", 10), lastname=random_string("l", 10), address=random_string("a", 20))
         for i in range(n)
     ]
-
 
 file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", f)
 

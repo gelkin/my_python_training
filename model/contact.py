@@ -1,10 +1,4 @@
 from sys import maxsize
-
-
-def remove_doubly_spaces(s):
-    return " ".join(s.split())
-
-
 class Contact:
     def __init__(self,firstname = "", middlename ="", lastname = "", nickname = "", title = "", company = "", address = "", homephone = "", mobilephone = "", workphone = "", fax = "", email = "", email2 = "", email3 = "", bday = "", bmonth = "", byear = "", aday = "", amonth = "", ayear = "", address2 = "", secondaryphone = "",notes = "", id=None,all_phones_from_home_page =None, all_emails_from_home_page =None):
         self.firstname = firstname
@@ -36,11 +30,10 @@ class Contact:
 
     def __repr__(self):
         return "%s:%s:%s" % (self.id,self.firstname,self.lastname)
-
     def __eq__(self, other):
-        return (self.id is None or other.id is None or str(self.id) == str(other.id)) \
-               and remove_doubly_spaces(self.firstname) == remove_doubly_spaces(other.firstname)\
-               and remove_doubly_spaces(self.lastname) == remove_doubly_spaces(other.lastname)
+        return (self.id is None or other.id is None or str(self.id) == str(other.id))\
+               and self.firstname.rstrip(" ") == other.firstname.rstrip(" ") \
+               and self.lastname.rstrip(" ") == other.lastname.rstrip(" ")
 
     def id_or_max(self):
         if self.id:

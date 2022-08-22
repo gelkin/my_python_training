@@ -15,21 +15,23 @@ def test_data_contact_on_home_page(app):
     assert contact_home.all_emails_from_home_page == merge_emails_like_on_home_page(contact_edit)
     assert contact_home.all_phones_from_home_page == merge_phones_like_on_home_page(contact_edit)
 
-
-def test_all_contacts(app, db):
-    ui_contacts = app.contact.get_contact_list()
+def test_all_contacts(app,db):
+    contacts = app.contact.get_contact_list()
     db_contacts = db.get_contact_list()
-    ui_contacts = sorted(ui_contacts, key=Contact.id_or_max)
-    db_contacts = sorted(db_contacts, key=Contact.id_or_max)
-    for i in range(len(ui_contacts)):
-        ui_contact = ui_contacts[i]
-        db_contact = db_contacts[i]
-        assert remove_doubly_spaces(ui_contact.firstname) == remove_doubly_spaces(db_contact.firstname)
-        assert remove_doubly_spaces(ui_contact.lastname) == remove_doubly_spaces(db_contact.lastname)
-        assert remove_doubly_spaces(ui_contact.address) == remove_doubly_spaces(db_contact.address)
-        assert ui_contact.all_emails_from_home_page == merge_emails_like_on_home_page(db_contact)
-        assert ui_contact.all_phones_from_home_page == merge_phones_like_on_home_page(db_contact)
+    contacts = sorted(contacts, key=Contact.id_or_max)
+    db_contacts = sorted(db_contacts, key = Contact.id_or_max)
+    assert len(contacts) == len(db_contacts)
+    for i in range(len(contacts)):
+        c = contacts[i]
+        db_c = db_contacts[i]
+        assert remove_double_spaces(c.firstname) == remove_double_spaces(db_c.firstname)
+        assert remove_double_spaces(c.lastname) == remove_double_spaces(db_c.lastname)
+        assert remove_double_spaces(c.address) == remove_double_spaces(db_c.address)
+        assert c.all_emails_from_home_page == merge_emails_like_on_home_page(db_c)
+        assert c.all_phones_from_home_page == merge_phones_like_on_home_page(db_c)
 
+def remove_double_spaces(s):
+    return " ".join(s.split())
 
 def merge_emails_like_on_home_page(contact):
     return "\n".join(filter(lambda x:x is not None and len(x) > 0,
@@ -37,9 +39,6 @@ def merge_emails_like_on_home_page(contact):
 
 def clear(s):
     return re.sub("[() -]", "", s)
-
-def remove_doubly_spaces(s):
-    return " ".join(s.split())
 
 def merge_phones_like_on_home_page(contact):
     return "\n".join(filter(lambda x: x != "",
